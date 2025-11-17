@@ -91,7 +91,6 @@ export function CourseCarousel({ courses }: CourseCarouselProps) {
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
-          WebkitScrollbar: { display: 'none' },
         }}
       >
         {courses.map((course) => (

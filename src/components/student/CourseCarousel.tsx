@@ -119,12 +119,6 @@ export function CourseCarousel({ courses }: CourseCarouselProps) {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </div>
   )
 }

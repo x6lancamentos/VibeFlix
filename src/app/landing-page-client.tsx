@@ -17,7 +17,7 @@ export default function LandingPageClient() {
       transition: {
         duration: 0.8,
         delay: 0.3 + i * 0.1,
-        ease: [0.25, 0.4, 0.25, 1],
+        ease: [0.25, 0.4, 0.25, 1] as const,
       },
     }),
   }

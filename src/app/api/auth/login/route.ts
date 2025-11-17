@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { login } from '@/lib/auth'
+import { login } from '@/lib/auth-server'
 import { loginSchema } from '@/lib/validations'
 import { cookies } from 'next/headers'
 

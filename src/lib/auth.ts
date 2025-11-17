@@ -1,19 +1,18 @@
 import { SignJWT, jwtVerify } from 'jose'
+import type { JWTPayload as JoseJWTPayload } from 'jose'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from './prisma'
-import bcrypt from 'bcryptjs'
 
 const secretKey = process.env.JWT_SECRET || 'default-secret-key-change-in-production'
 const key = new TextEncoder().encode(secretKey)
 
-export interface JWTPayload {
+export interface SessionPayload extends JoseJWTPayload {
   userId: string
   email: string
   role: 'ADMIN' | 'STUDENT'
 }
 
-export async function encrypt(payload: JWTPayload) {
+export async function encrypt(payload: SessionPayload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -21,37 +20,11 @@ export async function encrypt(payload: JWTPayload) {
     .sign(key)
 }
 
-export async function decrypt(input: string): Promise<JWTPayload> {
+export async function decrypt(input: string): Promise<SessionPayload> {
   const { payload } = await jwtVerify(input, key, {
     algorithms: ['HS256'],
   })
-  return payload as JWTPayload
-}
-
-export async function login(email: string, password: string) {
-  const user = await prisma.user.findUnique({
-    where: { email },
-  })
-
-  if (!user) {
-    return null
-  }
-
-  const isValid = await bcrypt.compare(password, user.password)
-
-  if (!isValid) {
-    return null
-  }
-
-  const payload: JWTPayload = {
-    userId: user.id,
-    email: user.email,
-    role: user.role,
-  }
-
-  const token = await encrypt(payload)
-
-  return { user, token }
+  return payload as SessionPayload
 }
 
 export async function getSession() {
